@@ -957,7 +957,11 @@ WHERE EXISTS (
       [`！`, `!`],
       [`？`, `?`],
       [`，`, `,`],
-      [`：`, `:`]
+      [`：`, `:`],
+      [`；`, `;`],
+      [`（`, `(`],
+      [`）`, `)`],
+      [`\u3000`, ` `]
     ]
 
     constructor(sequelize, supportsUnaccent, query) {
