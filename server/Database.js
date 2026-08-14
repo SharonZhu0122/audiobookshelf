@@ -964,8 +964,8 @@ WHERE EXISTS (
       [`\u3000`, ` `],
       [`\uff5e`, `~`],
       [`\u301c`, `~`],
-      [`\u2026\u2026`, `...`],
-      [`\u2014\u2014`, `--`]
+      [`\u2026`, `...`],
+      [`\u2014`, `--`]
     ]
 
     constructor(sequelize, supportsUnaccent, query) {
