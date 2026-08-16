@@ -982,11 +982,18 @@ WHERE EXISTS (
      * @returns {string}
      */
     normalizePunctuationJs(value) {
-      return this.constructor.PUNCTUATION_EQUIVALENTS.reduce((str, [from, to]) => str.split(from).join(to), value)
+      const punctuationNormalized = this.constructor.PUNCTUATION_EQUIVALENTS.reduce((str, [from, to]) => str.split(from).join(to), value)
+      return punctuationNormalized.replace(/\s+/g, ' ').trim()
     }
 
     normalizePunctuationSql(expression) {
-      return this.constructor.PUNCTUATION_EQUIVALENTS.reduce((expr, [from, to]) => `REPLACE(${expr}, ${this.sequelize.escape(from)}, ${this.sequelize.escape(to)})`, expression)
+      const punctuationNormalized = this.constructor.PUNCTUATION_EQUIVALENTS.reduce((expr, [from, to]) => `REPLACE(${expr}, ${this.sequelize.escape(from)}, ${this.sequelize.escape(to)})`, expression)
+      // SQLite has no built-in regex replace, so collapse runs of spaces by repeatedly
+      // replacing double-spaces with a single space (each pass halves the max run length)
+      const collapsedWhitespace = Array(5)
+        .fill(null)
+        .reduce((expr) => `REPLACE(${expr}, '  ', ' ')`, punctuationNormalized)
+      return `TRIM(${collapsedWhitespace})`
     }
 
     normalize(value) {
